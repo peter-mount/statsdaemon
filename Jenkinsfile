@@ -64,6 +64,7 @@ node( 'Build' ) {
             def builders = [:]
             platform[1].each {
                 architecture -> builders[ architecture[0] ] = node( "Build" ) {
+                    checkout scm
                     stage( architecture[0] ) {
                         buildTarget(  platform[0], architecture, 'compile' )
                     }
