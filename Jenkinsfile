@@ -34,7 +34,8 @@ def buildTarget = {
         " --build-arg branch=" + BRANCH_NAME +
         " --build-arg buildNumber=" + BUILD_NUMBER +
         " --build-arg uploadCred=" + UPLOAD_CRED +
-        " --build-arg uploadPath=https://nexus.area51.onl/repository/snapshots/statsdaemon/" + BRANCH_NAME + "/"
+        " --build-arg uploadPath=https://nexus.area51.onl/repository/snapshots/statsdaemon/" + BRANCH_NAME + "/" +
+        " ."
 }
 
 // Now the build pipeline
