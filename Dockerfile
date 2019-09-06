@@ -43,8 +43,8 @@ ARG goarm
 ARG branch
 ARG buildNumber
 ARG version
-ARG uploadPath=
-ARG uploadCred=
+ARG uploadPath
+ARG uploadCred
 WORKDIR /work
 
 # NB: CGO_ENABLED=0 forces a static build
