@@ -27,7 +27,7 @@ arm64v8 = [ 'arm64v8', 'arm64', ''  ]
 architectures = [
   [ 'linux',   [ amd64, arm32v6, arm32v7, arm64v8 ] ],
   [ 'darwin',  [ amd64 ] ],
-  [ 'freebsd', [ amd64, arm32v6, arm32v7, arm64v8 ] ],
+  [ 'freebsd', [ amd64, arm32v6, arm32v7 ] ],
 ]
 
 def buildTarget = {
