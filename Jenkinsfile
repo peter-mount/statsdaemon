@@ -25,13 +25,13 @@ architectures = [
     [ 'arm32v6', 'arm',   '6' ],
     [ 'arm32v7', 'arm',   '7' ],
     [ 'arm64v8', 'arm64', ''  ],
-  ],
+  ]],
   [ 'darwin', [
     [ 'amd64',   'amd64', ''  ]
-  ],
+  ]],
   [ 'freebsd', [
     [ 'amd64',   'amd64', ''  ],
-  ]
+  ]],
 ]
 
 def buildTarget = {
