@@ -52,11 +52,11 @@ node( 'Build' ) {
 
     stage( 'prepare' ) {
         checkout scm
-        buildTarget( architectures[0][0], architectures[0][1][0], 'build' )
+        buildTarget( 'linux', amd64, 'source' )
     }
 
     stage( 'test' ) {
-        buildTarget( architectures[0][0], architectures[0][1][0], 'test' )
+        buildTarget( 'linux', amd64, 'test' )
     }
 
     architectures.each {
