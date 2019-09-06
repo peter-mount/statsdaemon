@@ -94,6 +94,7 @@ var (
 	graphiteAddress   = flag.String("graphite", "127.0.0.1:2003", "Graphite service address (or - to disable)")
 	flushInterval     = flag.Int64("flush-interval", 10, "Flush interval (seconds)")
 	debug             = flag.Bool("debug", false, "print statistics sent to graphite")
+	logConsole        = flag.Bool("log", false, "Log how many stats sent to the console")
 	showVersion       = flag.Bool("version", false, "print version string")
 	deleteGauges      = flag.Bool("delete-gauges", true, "don't send values to graphite for inactive gauges, as opposed to sending the previous value")
 	persistCountKeys  = flag.Int64("persist-count-keys", 60, "number of flush-intervals to persist count keys")
@@ -244,7 +245,9 @@ func submit(deadline time.Time) error {
 		return errors.New(errmsg)
 	}
 
-	log.Printf("sent %d stats to %s", num, *graphiteAddress)
+	if *logConsole {
+		log.Printf("sent %d stats to %s", num, *graphiteAddress)
+	}
 
 	return nil
 }
@@ -253,14 +256,14 @@ func processCounters(buffer *bytes.Buffer, now int64) int64 {
 	var num int64
 	// continue sending zeros for counters for a short period of time even if we have no new data
 	for bucket, value := range counters {
-		fmt.Fprintf(buffer, "%s %s %d\n", bucket, strconv.FormatFloat(value, 'f', -1, 64), now)
+		_, _ = fmt.Fprintf(buffer, "%s %s %d\n", bucket, strconv.FormatFloat(value, 'f', -1, 64), now)
 		delete(counters, bucket)
 		countInactivity[bucket] = 0
 		num++
 	}
 	for bucket, purgeCount := range countInactivity {
 		if purgeCount > 0 {
-			fmt.Fprintf(buffer, "%s 0 %d\n", bucket, now)
+			_, _ = fmt.Fprintf(buffer, "%s 0 %d\n", bucket, now)
 			num++
 		}
 		countInactivity[bucket] += 1
@@ -275,7 +278,7 @@ func processGauges(buffer *bytes.Buffer, now int64) int64 {
 	var num int64
 
 	for bucket, currentValue := range gauges {
-		fmt.Fprintf(buffer, "%s %s %d\n", bucket, strconv.FormatFloat(currentValue, 'f', -1, 64), now)
+		_, _ = fmt.Fprintf(buffer, "%s %s %d\n", bucket, strconv.FormatFloat(currentValue, 'f', -1, 64), now)
 		num++
 		if *deleteGauges {
 			delete(gauges, bucket)
@@ -293,7 +296,7 @@ func processSets(buffer *bytes.Buffer, now int64) int64 {
 			uniqueSet[str] = true
 		}
 
-		fmt.Fprintf(buffer, "%s %d %d\n", bucket, len(uniqueSet), now)
+		_, _ = fmt.Fprintf(buffer, "%s %d %d\n", bucket, len(uniqueSet), now)
 		delete(sets, bucket)
 	}
 	return num
@@ -344,17 +347,17 @@ func processTimers(buffer *bytes.Buffer, now int64, pctls Percentiles) int64 {
 				pctstr = pct.str[1:]
 			}
 			threshold_s := strconv.FormatFloat(maxAtThreshold, 'f', -1, 64)
-			fmt.Fprintf(buffer, tmpl, bucketWithoutPostfix, pctstr, *postfix, threshold_s, now)
+			_, _ = fmt.Fprintf(buffer, tmpl, bucketWithoutPostfix, pctstr, *postfix, threshold_s, now)
 		}
 
 		mean_s := strconv.FormatFloat(mean, 'f', -1, 64)
 		max_s := strconv.FormatFloat(max, 'f', -1, 64)
 		min_s := strconv.FormatFloat(min, 'f', -1, 64)
 
-		fmt.Fprintf(buffer, "%s.mean%s %s %d\n", bucketWithoutPostfix, *postfix, mean_s, now)
-		fmt.Fprintf(buffer, "%s.upper%s %s %d\n", bucketWithoutPostfix, *postfix, max_s, now)
-		fmt.Fprintf(buffer, "%s.lower%s %s %d\n", bucketWithoutPostfix, *postfix, min_s, now)
-		fmt.Fprintf(buffer, "%s.count%s %d %d\n", bucketWithoutPostfix, *postfix, count, now)
+		_, _ = fmt.Fprintf(buffer, "%s.mean%s %s %d\n", bucketWithoutPostfix, *postfix, mean_s, now)
+		_, _ = fmt.Fprintf(buffer, "%s.upper%s %s %d\n", bucketWithoutPostfix, *postfix, max_s, now)
+		_, _ = fmt.Fprintf(buffer, "%s.lower%s %s %d\n", bucketWithoutPostfix, *postfix, min_s, now)
+		_, _ = fmt.Fprintf(buffer, "%s.count%s %d %d\n", bucketWithoutPostfix, *postfix, count, now)
 
 		delete(timers, bucket)
 	}

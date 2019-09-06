@@ -1,7 +1,15 @@
-statsdaemon
-==========
+# statsdaemon
 
-Port of Etsy's statsd (https://github.com/etsy/statsd), written in Go (originally based
+This is a fork of [bitly/statsdaemon](https://github.com/bitly/statsdaemon) with a few modifications:
+
+* New -log flag. The original logged to the console the number of stats sent every period spamming syslog when run
+inside statsd. This fork doesn't do this unless this flag is set.
+* Example systemd script to launch it
+* Jenkinsfile thats used by my public Jenkins instance to build it & makes regular public builds
+
+## Original README
+
+Port of [Etsy's statsd](https://github.com/etsy/statsd), written in Go (originally based
 on [amir/gographite](https://github.com/amir/gographite)).
 
 Supports:
@@ -11,37 +19,11 @@ Supports:
 * Gauges (including relative operations)
 * Sets
 
-Initially only integers were supported for metric values,
-but now double-precision floating-point is supported.
+Initially only integers were supported for metric values, but now double-precision floating-point is supported.
 
 [![Build Status](https://secure.travis-ci.org/bitly/statsdaemon.png)](http://travis-ci.org/bitly/statsdaemon)
 
-Installing
-==========
-
-### Binary Releases
-Pre-built binaries for darwin and linux.
-
-### Current Stable Release: `v0.7.1`
-* [statsdaemon-0.7.1.darwin-amd64.go1.4.2.tar.gz](https://github.com/bitly/statsdaemon/releases/download/v0.7.1/statsdaemon-0.7.1.darwin-amd64.go1.4.2.tar.gz)
-* [statsdaemon-0.7.1.linux-amd64.go1.4.2.tar.gz](https://github.com/bitly/statsdaemon/releases/download/v0.7.1/statsdaemon-0.7.1.linux-amd64.go1.4.2.tar.gz)
-
-### Older Releases
-* [statsdaemon-0.6-alpha.darwin-amd64.go1.3.tar.gz](https://github.com/bitly/statsdaemon/releases/download/v0.6-alpha/statsdaemon-0.6-alpha.darwin-amd64.go1.3.tar.gz)
-* [statsdaemon-0.6-alpha.linux-amd64.go1.3.tar.gz](https://github.com/bitly/statsdaemon/releases/download/v0.6-alpha/statsdaemon-0.6-alpha.linux-amd64.go1.3.tar.gz)
-* [statsdaemon-0.5.2-alpha.linux-amd64.go1.1.1.tar.gz](https://github.com/bitly/statsdaemon/releases/download/v0.5.2-alpha/statsdaemon-0.5.2-alpha.linux-amd64.go1.1.1.tar.gz)
-
-### Building from Source
-```
-git clone https://github.com/bitly/statsdaemon
-cd statsdaemon
-go get github.com/bmizerany/assert #for tests
-go build
-```
-
-
-Command Line Options
-====================
+## Command Line Options
 
 ```
 Usage of ./statsdaemon:
@@ -50,6 +32,7 @@ Usage of ./statsdaemon:
   -delete-gauges=true: don't send values to graphite for inactive gauges, as opposed to sending the previous value
   -flush-interval=10: Flush interval (seconds)
   -graphite="127.0.0.1:2003": Graphite service address (or - to disable)
+  -log: Log to console every time stats are submitted to graphite
   -max-udp-packet-size=1472: Maximum UDP packet size
   -percent-threshold=[]: percentile calculation for timers (0-100, may be given multiple times)
   -persist-count-keys=60: number of flush-intervals to persist count keys

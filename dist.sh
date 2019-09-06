@@ -5,6 +5,7 @@ set -eu
 cd "$(dirname "$0")"
 DIR=$(pwd)
 echo "working dir $DIR"
+rm -rf $DIR/dist
 mkdir -p $DIR/dist
 
 arch=$(go env GOARCH)
