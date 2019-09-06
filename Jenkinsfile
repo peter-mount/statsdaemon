@@ -46,9 +46,6 @@ def buildTarget = {
 
 // Now the build pipeline
 node( 'Build' ) {
-  withCredentials([
-    usernameColonPassword(credentialsId: 'artifact-publisher', variable: 'UPLOAD_CRED')]
-  ) {
 
     stage( 'prepare' ) {
         checkout scm
@@ -59,19 +56,23 @@ node( 'Build' ) {
         buildTarget( 'linux', amd64, 'test' )
     }
 
-    architectures.each {
-        platform -> stage( platform[0] ) {
-            def builders = [:]
-            platform[1].each {
-                architecture -> builders[ architecture[0] ] = node( "Build" ) {
-                    checkout scm
+}
+
+architectures.each {
+    platform -> stage( platform[0] ) {
+        def builders = [:]
+        platform[1].each {
+            architecture -> builders[ architecture[0] ] = node( "Build" ) {
+                withCredentials([
+                    usernameColonPassword(credentialsId: 'artifact-publisher', variable: 'UPLOAD_CRED')]
+                ) {
                     stage( architecture[0] ) {
+                        checkout scm
                         buildTarget(  platform[0], architecture, 'compile' )
                     }
                 }
             }
-            parallel builders
         }
+        parallel builders
     }
-  }
 }
