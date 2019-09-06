@@ -63,8 +63,10 @@ node( 'Build' ) {
         platform -> stage( platform[0] ) {
             def builders = [:]
             platform[1].each {
-                architecture -> builders[ architecture[0] ] = stage( architecture[0] ) {
-                    buildTarget(  platform[0], architecture, 'compile' )
+                architecture -> builders[ architecture[0] ] = node( "Build" ) {
+                    stage( architecture[0] ) {
+                        buildTarget(  platform[0], architecture, 'compile' )
+                    }
                 }
             }
             parallel builders
