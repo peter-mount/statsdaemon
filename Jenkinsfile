@@ -46,16 +46,20 @@ def buildTarget = {
 
 // Now the build pipeline
 node( 'Build' ) {
+    withCredentials([
+        usernameColonPassword(credentialsId: 'artifact-publisher', variable: 'UPLOAD_CRED')]
+    ) {
 
-    stage( 'prepare' ) {
-        checkout scm
-        buildTarget( 'linux', amd64, 'source' )
+        stage( 'prepare' ) {
+            checkout scm
+            buildTarget( 'linux', amd64, 'source' )
+        }
+
+        stage( 'test' ) {
+            buildTarget( 'linux', amd64, 'test' )
+        }
+
     }
-
-    stage( 'test' ) {
-        buildTarget( 'linux', amd64, 'test' )
-    }
-
 }
 
 architectures.each {
