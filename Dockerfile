@@ -49,7 +49,7 @@ WORKDIR /work
 
 # NB: CGO_ENABLED=0 forces a static build
 RUN VERSION="${version}.${branch}.${buildNumber}" &&\
-    sed -i "s/\"dev\"/\"${VERSION}/g" version.go &&\
+    sed -i "s/\"dev\"/\"${VERSION}\"/g" version.go &&\
     GOVERSION=$(go version | awk '{print $3}') &&\
     TARGET="statsdaemon-${VERSION}.${goos}-${arch}.${GOVERSION}.${buildNumber}" &&\
     TAR="${TARGET}.tgz" &&\
