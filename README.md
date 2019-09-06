@@ -1,4 +1,9 @@
 # statsdaemon
+[![Build Status](http://jenkins.area51.dev/buildStatus/icon?job=peter-mount%2Fstatsdaemon%2Fmaster)](http://jenkins.area51.dev/job/peter-mount/job/statsdaemon/job/master/)
+![GitHub last commit](https://badge.area51.onl/github/last-commit/peter-mount/statsdaemon.svg?style=plastic)
+![GitHub](https://badge.area51.onl/github/license/peter-mount/statsdaemon.svg?style=plastic)
+![GitHub repo size in bytes](https://badge.area51.onl/github/repo-size/peter-mount/statsdaemon.svg?style=plastic)
+![Twitter Follow](https://badge.area51.onl/twitter/follow/peter_mount.svg?style=plastic)
 
 This is a fork of [bitly/statsdaemon](https://github.com/bitly/statsdaemon) with a few modifications:
 
@@ -6,6 +11,18 @@ This is a fork of [bitly/statsdaemon](https://github.com/bitly/statsdaemon) with
 inside statsd. This fork doesn't do this unless this flag is set.
 * Example systemd script to launch it
 * Jenkinsfile thats used by my public Jenkins instance to build it & makes regular public builds
+
+## Download
+
+The recent builds are available via [Nexus](https://nexus.area51.dev/#browse/browse:snapshots:statsdaemon%2Fmaster)
+with each file of the format statsdaemon-0.7.1-area51.master.18.darwin-amd64.go1.13.tgz
+* statsdaemon-0.7.1-area51 is the version
+* master.18 is the master branch build 18
+* darwin the operating system
+* amd64 the processor architecture
+* go1.13 the version of go used in the build, in this instance 1.13
+
+The files are ordered by build number so scroll down until you get to the most recent build.
 
 ## Original README
 
@@ -20,8 +37,6 @@ Supports:
 * Sets
 
 Initially only integers were supported for metric values, but now double-precision floating-point is supported.
-
-[![Build Status](https://secure.travis-ci.org/bitly/statsdaemon.png)](http://travis-ci.org/bitly/statsdaemon)
 
 ## Command Line Options
 
