@@ -19,27 +19,23 @@ properties([
 version="0.7.1-area51"
 
 // The architectures to build. This is an array of goos & entries per platform eg [goos,arch,goarch,goarm]
+amd64   = [ 'amd64',   'amd64', ''  ]
+arm32v6 = [ 'arm32v6', 'arm',   '6' ]
+arm32v7 = [ 'arm32v7', 'arm',   '7' ]
+arm64v8 = [ 'arm64v8', 'arm64', ''  ]
+
 architectures = [
-  [ 'linux',   [
-    [ 'amd64',   'amd64', ''  ],
-    [ 'arm32v6', 'arm',   '6' ],
-    [ 'arm32v7', 'arm',   '7' ],
-    [ 'arm64v8', 'arm64', ''  ],
-  ]],
-  [ 'darwin', [
-    [ 'amd64',   'amd64', ''  ]
-  ]],
-  [ 'freebsd', [
-    [ 'amd64',   'amd64', ''  ],
-  ]],
+  [ 'linux',   [ amd64, arm32v6, arm32v7, arm64 ] ],
+  [ 'darwin',  [ amd64 ] ],
+  [ 'freebsd', [ amd64, arm32v6, arm32v7, arm64 ] ],
 ]
 
 def buildTarget = {
-    architecture, target -> sh "docker build -t test/statsdaemon:latest" +
-        " --build-arg goos=" + architecture[0] +
-        " --build-arg arch=" + architecture[1] +
-        " --build-arg goarch=" + architecture[2] +
-        " --build-arg goarm=" + architecture[3] +
+    operatingSystem, architecture, target -> sh "docker build -t test/statsdaemon:latest" +
+        " --build-arg goos=" + operatingSystem +
+        " --build-arg arch=" + architecture[0] +
+        " --build-arg goarch=" + architecture[1] +
+        " --build-arg goarm=" + architecture[2] +
         " --build-arg branch=" + BRANCH_NAME +
         " --build-arg buildNumber=" + BUILD_NUMBER +
         " --build-arg version=" + version +
