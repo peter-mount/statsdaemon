@@ -25,15 +25,17 @@ architectures = [
  [ 'freebsd', 'amd64',   'amd64', ''  ],
 ]
 
-buildTarget = ( architecture, target) -> sh "docker build -t test/statsdaemon:latest" +
-    " --build-arg goos=" + architecture[0] +
-    " --build-arg arch=" + architecture[1] +
-    " --build-arg goarch=" + architecture[2] +
-    " --build-arg goarm=" + architecture[3] +
-    " --build-arg branch=" + BRANCH_NAME +
-    " --build-arg buildNumber=" + BUILD_NUMBER +
-    " --build-arg uploadCred=" + UPLOAD_CRED +
-    " --build-arg uploadPath=https://nexus.area51.onl/repository/snapshots/statsdaemon/" + BRANCH_NAME + "/"
+def buildTarget = {
+    architecture, target -> sh "docker build -t test/statsdaemon:latest" +
+        " --build-arg goos=" + architecture[0] +
+        " --build-arg arch=" + architecture[1] +
+        " --build-arg goarch=" + architecture[2] +
+        " --build-arg goarm=" + architecture[3] +
+        " --build-arg branch=" + BRANCH_NAME +
+        " --build-arg buildNumber=" + BUILD_NUMBER +
+        " --build-arg uploadCred=" + UPLOAD_CRED +
+        " --build-arg uploadPath=https://nexus.area51.onl/repository/snapshots/statsdaemon/" + BRANCH_NAME + "/"
+}
 
 // Now the build pipeline
 node( 'Build' ) {
