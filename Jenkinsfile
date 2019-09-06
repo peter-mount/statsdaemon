@@ -15,14 +15,23 @@ properties([
   ])
 ])
 
-// The architectures to build. This is an array of [goos,arch,goarch,goarm]
+// The version to build
+version="0.7.1-area51"
+
+// The architectures to build. This is an array of goos & entries per platform eg [goos,arch,goarch,goarm]
 architectures = [
- [ 'linux',   'amd64',   'amd64', ''  ],
- [ 'linux',   'arm32v6', 'arm',   '6' ],
- [ 'linux',   'arm32v7', 'arm',   '7' ],
- [ 'linux',   'arm64v8', 'arm64', ''  ],
- [ 'darwin',  'amd64',   'amd64', ''  ],
- [ 'freebsd', 'amd64',   'amd64', ''  ],
+  [ 'linux',   [
+    [ 'amd64',   'amd64', ''  ],
+    [ 'arm32v6', 'arm',   '6' ],
+    [ 'arm32v7', 'arm',   '7' ],
+    [ 'arm64v8', 'arm64', ''  ],
+  ],
+  [ 'darwin', [
+    [ 'amd64',   'amd64', ''  ]
+  ],
+  [ 'freebsd', [
+    [ 'amd64',   'amd64', ''  ],
+  ]
 ]
 
 def buildTarget = {
@@ -33,6 +42,7 @@ def buildTarget = {
         " --build-arg goarm=" + architecture[3] +
         " --build-arg branch=" + BRANCH_NAME +
         " --build-arg buildNumber=" + BUILD_NUMBER +
+        " --build-arg version=" + version +
         " --build-arg uploadCred=" + UPLOAD_CRED +
         " --build-arg uploadPath=https://nexus.area51.onl/repository/snapshots/statsdaemon/" + BRANCH_NAME + "/" +
         " ."
@@ -46,16 +56,22 @@ node( 'Build' ) {
 
     stage( 'prepare' ) {
         checkout scm
-        buildTarget( architectures[0], 'build' )
+        buildTarget( architectures[0][0], architectures[0][1][0], 'build' )
     }
 
     stage( 'test' ) {
-        buildTarget( architectures[0], 'test' )
+        buildTarget( architectures[0][0], architectures[0][1][0], 'test' )
     }
 
     architectures.each {
-        architecture -> stage( architecture[0] + ' ' + architecture[1] ) {
-            buildTarget( architecture, 'compile' )
+        platform -> stage( platform[0] ) {
+            def builders = [:]
+            platform[1].each {
+                architecture -> stage( architecture[0] ) {
+                    buildTarget(  platform[0], architecture, 'compile' )
+                }
+            }
+            parallel builders
         }
     }
   }

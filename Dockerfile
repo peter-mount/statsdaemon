@@ -42,12 +42,14 @@ ARG goarch
 ARG goarm
 ARG branch
 ARG buildNumber
+ARG version
 ARG uploadPath=
 ARG uploadCred=
 WORKDIR /work
 
 # NB: CGO_ENABLED=0 forces a static build
-RUN VERSION="$(awk '/const VERSION/ {print $NF}' version.go | sed 's/"//g')-${branch}" &&\
+RUN VERSION="${version}.${branch}.${buildNumber}" &&\
+    sed -i "s/\"dev\"/\"${VERSION}/g" version.go &&\
     GOVERSION=$(go version | awk '{print $3}') &&\
     TARGET="statsdaemon-${VERSION}.${goos}-${arch}.${GOVERSION}.${buildNumber}" &&\
     TAR="${TARGET}.tgz" &&\
