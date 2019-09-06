@@ -16,15 +16,15 @@ properties([
 ])
 
 // The version to build
-version="0.7.1-area51"
+def version="0.7.1-area51"
 
 // The architectures to build. This is an array of goos & entries per platform eg [goos,arch,goarch,goarm]
-amd64   = [ 'amd64',   'amd64', ''  ]
-arm32v6 = [ 'arm32v6', 'arm',   '6' ]
-arm32v7 = [ 'arm32v7', 'arm',   '7' ]
-arm64v8 = [ 'arm64v8', 'arm64', ''  ]
+def amd64   = [ 'amd64',   'amd64', ''  ]
+def arm32v6 = [ 'arm32v6', 'arm',   '6' ]
+def arm32v7 = [ 'arm32v7', 'arm',   '7' ]
+def arm64v8 = [ 'arm64v8', 'arm64', ''  ]
 
-architectures = [
+def architectures = [
   [ 'linux',   [ amd64, arm32v6, arm32v7, arm64 ] ],
   [ 'darwin',  [ amd64 ] ],
   [ 'freebsd', [ amd64, arm32v6, arm32v7, arm64 ] ],
