@@ -41,6 +41,7 @@ def buildTarget = {
         " --build-arg version=" + version +
         " --build-arg uploadCred=" + UPLOAD_CRED +
         " --build-arg uploadPath=https://nexus.area51.onl/repository/snapshots/statsdaemon/" + BRANCH_NAME + "/" +
+        " --target " + target +
         " ."
 }
 
